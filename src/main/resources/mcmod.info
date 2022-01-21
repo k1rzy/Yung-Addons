@@ -1,0 +1,16 @@
+[
+{
+  "modid": "yungaddons",
+  "name": "Yung Addons",
+  "description": "A new qol skyblock mod with a lot of unique features!",
+  "version": "${version}",
+  "mcversion": "1.8.9",
+  "url": "https://github.com/k1rzy/Yung-Addons",
+  "updateUrl": "https://github.com/k1rzy/Yung-Addons",
+  "authorList": ["kirzy.yung"],
+  "credits": "The Forge and FML guys, for making this example",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
