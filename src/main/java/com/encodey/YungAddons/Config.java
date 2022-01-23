@@ -151,6 +151,7 @@ public class Config extends Vigilant{
             description = "Shows gemstone block ESP"
     )
     public static boolean gemesp;
+    //oops
     @Property(type = PropertyType.SWITCH, category = "ESP", subcategory = "Other Mobs", name = "Wolf ESP", description = "Shows Wolf hitboxes")
     public static boolean wolfesp;
     @Property(type = PropertyType.SWITCH, category = "ESP", subcategory = "Other Mobs", name = "Spider ESP", description = "Shows Spider hitboxes")
