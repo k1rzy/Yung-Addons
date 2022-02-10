@@ -33,7 +33,7 @@ public class Beacon {
     public static boolean activated;
     public static boolean running;
 
-    private static long wormNotifMillis = 0;
+    private static long beaNotifMillis = 0;
 
     public static boolean dopb;
 
@@ -66,7 +66,7 @@ public class Beacon {
             beacon = closestBeacon();
             try {
                 if (beacon != null && !running) {
-                    wormNotifMillis = System.currentTimeMillis();
+                    beaNotifMillis = System.currentTimeMillis();
                     running = true;
                     if(!dopb) {
                         dopb = true;
