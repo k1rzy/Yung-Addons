@@ -165,7 +165,7 @@ public class Config extends Vigilant {
             description = "Change your dungeon chest ESP color!"
     )
     public static Color ESPColorchest = new Color(255, 0, 0, 250);
-    public static boolean gemesp;
+    // scuffed code bc lost files sry
     @Property(type = PropertyType.SWITCH, category = "ESP (!QOL!)", subcategory = "Other Mobs", name = "Wolf ESP", description = "Shows Wolf hitboxes")
     public static boolean wolfesp;
     @Property(type = PropertyType.SWITCH, category = "ESP (!QOL!)", subcategory = "Other Mobs", name = "Spider ESP", description = "Shows Spider hitboxes")
