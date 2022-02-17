@@ -2,7 +2,7 @@
 
 (!IN DEVELOPMENT!)
 
-Discord server: https://discord.gg/u2WqU2xnMC
+Discord server: https://discord.gg/u2BqU3xnMCA
 
 Credits to:
 -bowser0000 (https://github.com/bowser0000/SkyblockMod)
