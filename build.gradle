@@ -1,0 +1,153 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+buildscript {
+    repositories {
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.minecraftforge.net/' }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url = "https://repo.spongepowered.org/maven" }
+    }
+    dependencies {
+        classpath 'com.github.Skytils:ForgeGradle:6f5327'
+        classpath 'com.github.LxGaming:MixinGradle:d75e32e'//0.6-SNAPSHOT'
+        classpath "com.github.johnrengelman:shadow:6.1.0"
+    }
+}
+plugins {
+    id 'io.franzbecker.gradle-lombok' version '1.8'
+    id 'java'
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'java'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spongepowered.org/maven/' }
+    maven { url 'https://jitpack.io' }
+    maven { url = "https://repo.sk1er.club/repository/maven-public" }
+    maven { url = "https://repo.spongepowered.org/repository/maven-public/" }
+    maven { url "https://repo.sk1er.club/repository/maven-releases/" }
+}
+configurations {
+    packageLib
+    configurations.implementation.extendsFrom(configurations.packageLib)
+}
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    annotationProcessor 'org.projectlombok:lombok:1.18.4'
+    compile('org.spongepowered:mixin:0.7.11-SNAPSHOT')
+    annotationProcessor('org.spongepowered:mixin:0.7.11-SNAPSHOT')
+    //implementation("gg.essential:loader-launchwrapper:1.1.2")
+    packageLib("gg.essential:loader-launchwrapper:1.1.2")
+    implementation("gg.essential:essential-1.8.9-forge:1733") {
+        exclude module: 'gson'
+    }
+    implementation('org.java-websocket:Java-WebSocket:1.5.2')
+}
+sourceSets {
+    main { output.resourcesDir = java.outputDir }
+}
+mixin {
+    disableRefMapWarning = true
+    defaultObfuscationEnv searge
+    add sourceSets.main, "mixins.yungaddons.refmap.json"
+}
+shadowJar {
+    dependencies {
+        include(dependency('org.spongepowered:mixin:0.7.11-SNAPSHOT'))
+        include(dependency("gg.essential:loader-launchwrapper:1.1.2"))
+        include(dependency("org.java-websocket:Java-WebSocket:1.5.2"))
+        include(dependency("org.slf4j:slf4j-api:1.7.25"))
+    }
+    exclude('dummyThing')
+    exclude('META-INF/maven/')
+
+    archiveFileName = jar.archiveFileName
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    configurations = [project.configurations.packageLib]
+}
+reobf {
+    shadowJar {
+        classpath = sourceSets.main.compileClasspath
+    }
+}
+test {
+    systemProperty "file.encoding", "utf-8"
+}
+
+version = "1.9"
+group = "com.encodey.YungAddons"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+minecraft {
+    version = "1.8.9-11.15.1.2318-1.8.9"
+    runDir = "run"
+
+    mappings = "stable_22"
+     clientJvmArgs += ["-Dfml.coreMods.load=com.encodey.YungAddons.Transformer"]
+     clientRunArgs += ["--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker", "--mixin mixins.yungaddons.json"]
+
+}
+jar {
+    manifest.attributes(
+            "Main-Class": "YoinkedInstallerFrame",
+            "ForceLoadAsMod": true,
+            "FMLCorePluginContainsFMLMod": true,
+            "FMLCorePlugin": "com.encodey.YungAddons.Transformer",
+            "ModSide": "CLIENT",
+            "MixinConfigs": "mixins.yungaddons.json",
+            "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
+            "TweakOrder": "0"
+    )
+}
+sourceJar {
+    enabled = false
+}
+
+// Automatic version replacements
+task processSource(type: Sync) {
+    from sourceSets.main.java
+    inputs.property 'version', project.version
+    filter(ReplaceTokens, tokens: [version: project.version])
+    into "$buildDir/src"
+}
+ext {
+    mixinSrg = new File(project.buildDir, 'tmp/mixins/mixins.srg')
+    mixinRefMap = new File(project.buildDir, 'tmp/mixins/mixins.yungaddons.refmap.json')
+}
+compileJava {
+    options.compilerArgs += [
+            "-AoutSrgFile=${project.mixinSrg.canonicalPath}",
+            "-AoutRefMapFile=${project.mixinRefMap.canonicalPath}",
+            "-AreobfSrgFile=${project.file('build/mcp-srg.srg').canonicalPath}"
+    ]
+    source = processSource.outputs
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        include 'assets'
+        expand 'version': project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'assets'
+        exclude 'mcmod.info'
+    }
+}
+sourceSets {
+    main { output.resourcesDir = java.outputDir }
+}
+
+tasks.reobfJar.dependsOn(shadowJar)
