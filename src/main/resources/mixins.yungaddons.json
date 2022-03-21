@@ -1,0 +1,18 @@
+{
+  "compatibilityLevel": "JAVA_8",
+  "package": "com.encodey.YungAddons.mixins",
+  "refmap": "mixins.yungscripts.refmap.json",
+  "mixins": [
+    "AnvilMixin",
+    "MixinChunk",
+    "MixinNetHandlerPlayClient",
+    "MixinSession",
+    "MixinYggdrasil",
+    "Packets"
+  ],
+  "client": [
+    "MinecraftMixin",
+    "PlayerControllerMixin",
+    "MixinFontRenderer"
+  ]
+}
