@@ -117,7 +117,7 @@ public class ActualScript extends ScriptUtils {
     private boolean alreadyNorth;
     private boolean alreadyWest;
 
-    private final Set<Block> walkthrough;
+    private final Set<Block> blocks;
 
     private boolean wasOnLadder;
     public static int workedSessions;
@@ -190,7 +190,7 @@ public class ActualScript extends ScriptUtils {
 
     private int done;
     public ActualScript() {
-        this.walkthrough = new HashSet<>(Arrays.asList(Blocks.air, Blocks.water, Blocks.flowing_water, Blocks.trapdoor, Blocks.iron_trapdoor, Blocks.oak_door, Blocks.iron_door));
+        this.blocks = new HashSet<>(Arrays.asList(Blocks.air, Blocks.water, Blocks.flowing_water, Blocks.trapdoor, Blocks.iron_trapdoor, Blocks.oak_door, Blocks.iron_door));
     }
 
     public static boolean inLimbo() {
@@ -1890,7 +1890,7 @@ public class ActualScript extends ScriptUtils {
     }
     public boolean isValid(final EnumFacing f, final BlockPos pos) {
         final BlockPos offset = pos.offset(f);
-        return walkthrough.contains(mc.theWorld.getBlockState(offset).getBlock()) && walkthrough.contains(mc.theWorld.getBlockState(offset.up()).getBlock()) && mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, (double)(MathUtils.roundUp(mc.thePlayer.posY) - 1), mc.thePlayer.posZ)).getBlock() != Blocks.air;
+        return blocks.contains(mc.theWorld.getBlockState(offset).getBlock()) && blocks.contains(mc.theWorld.getBlockState(offset.up()).getBlock()) && mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, (double)(MathUtils.roundUp(mc.thePlayer.posY) - 1), mc.thePlayer.posZ)).getBlock() != Blocks.air;
     }
     private BlockPos closestLadder() {
         int r = 1;
